@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  hive4-mariadb:
+    image: mariadb:10
+    container_name: mariadb-alone
+    environment:
+      - MYSQL_ROOT_PASSWORD=my_password
+      - MYSQL_DATABASE=my_mariadb_db
+      - MYSQL_USER=my_user
+      - MYSQL_PASSWORD=my_password
+    ports:
+      - "3307:3306" # Exponer el puerto 3306 para MariaDB
+    networks:
+      - gestbd_net
+    volumes:
+      - ./data:/var/lib/mysql
+          
+      
+      
+networks:
+    gestbd_net:
+      external: true
