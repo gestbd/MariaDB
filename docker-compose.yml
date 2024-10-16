@@ -1,22 +1,35 @@
 version: '3.9'
 services:
-  hive4-mariadb:
+  mariadb-alone:
     image: mariadb:10
-    container_name: mariadb-alone
+    container_name: mariadb-alone-gestdb
     environment:
       - MYSQL_ROOT_PASSWORD=my_password
       - MYSQL_DATABASE=my_mariadb_db
       - MYSQL_USER=my_user
       - MYSQL_PASSWORD=my_password
     ports:
-      - "3307:3306" # Exponer el puerto 3306 para MariaDB
+      - "3307:3306" # Exponer el puerto 3306 para MariaDB en el puerto 3307 local
     networks:
       - gestbd_net
     volumes:
       - ./data:/var/lib/mysql
-          
-      
-      
+  
+  phpmyadmin-maria-alone:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-mariadb-gestdb
+    environment:
+      PMA_HOST: mariadb-alone
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: my_password
+    restart: always
+    ports:
+      - "8083:80"  # Puerto para acceder a phpMyAdmin
+    depends_on:
+      - mariadb-alone
+    networks:
+      - gestbd_net
+  
 networks:
-    gestbd_net:
-      external: true
+  gestbd_net:
+    external: true
